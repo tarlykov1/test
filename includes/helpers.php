@@ -91,7 +91,17 @@ function gspcp_ensure_categories() {
  * @return string
  */
 function gspcp_get_placeholder_url() {
-	return GSPCP_PLUGIN_URL . 'assets/img/placeholder.svg';
+	return gspcp_get_asset_image_url( 'placeholder.svg' );
+}
+
+/**
+ * Gets plugin asset image URL.
+ *
+ * @param string $filename Asset filename in assets/img.
+ * @return string
+ */
+function gspcp_get_asset_image_url( $filename ) {
+	return GSPCP_PLUGIN_URL . 'assets/img/' . ltrim( $filename, '/' );
 }
 
 /**
@@ -102,7 +112,7 @@ function gspcp_get_placeholder_url() {
  * @param string $class   CSS class.
  * @return string
  */
-function gspcp_get_image_html( $post_id, $size = 'large', $class = 'gspcp-card__image' ) {
+function gspcp_get_image_html( $post_id, $size = 'large', $class = 'gspcp-card__image', $fallback = 'placeholder.svg' ) {
 	if ( has_post_thumbnail( $post_id ) ) {
 		return get_the_post_thumbnail(
 			$post_id,
@@ -117,7 +127,7 @@ function gspcp_get_image_html( $post_id, $size = 'large', $class = 'gspcp-card__
 	return sprintf(
 		'<img class="%1$s" src="%2$s" alt="" loading="lazy" />',
 		esc_attr( $class ),
-		esc_url( gspcp_get_placeholder_url() )
+		esc_url( gspcp_get_asset_image_url( $fallback ) )
 	);
 }
 
@@ -194,4 +204,111 @@ function gspcp_format_date( $date ) {
 	}
 
 	return date_i18n( 'j F', $timestamp );
+}
+
+
+/**
+ * Returns demo programs used when the portal has no published program posts.
+ *
+ * @return array<int,array<string,string>>
+ */
+function gspcp_get_demo_programs() {
+	return array(
+		array(
+			'title'       => __( 'Кружки и секции', 'gsp-children-portal' ),
+			'description' => __( 'Творческие студии, инженерные занятия и клубы по интересам для детей сотрудников.', 'gsp-children-portal' ),
+			'age'         => __( '6–14 лет', 'gsp-children-portal' ),
+			'image'       => 'program-education.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+		array(
+			'title'       => __( 'Спортивные секции', 'gsp-children-portal' ),
+			'description' => __( 'Командные игры, плавание, лыжи и семейные старты для активного отдыха.', 'gsp-children-portal' ),
+			'age'         => __( '5–16 лет', 'gsp-children-portal' ),
+			'image'       => 'program-sport.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+		array(
+			'title'       => __( 'Детские лагеря', 'gsp-children-portal' ),
+			'description' => __( 'Летние смены с насыщенной программой, наставниками и безопасной средой.', 'gsp-children-portal' ),
+			'age'         => __( '7–15 лет', 'gsp-children-portal' ),
+			'image'       => 'program-camp.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+		array(
+			'title'       => __( 'Олимпиады и конкурсы', 'gsp-children-portal' ),
+			'description' => __( 'Интеллектуальные соревнования, творческие задания и поддержка талантов.', 'gsp-children-portal' ),
+			'age'         => __( '8–17 лет', 'gsp-children-portal' ),
+			'image'       => 'program-olympiad.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+		array(
+			'title'       => __( 'Профориентация', 'gsp-children-portal' ),
+			'description' => __( 'Знакомство с инженерными профессиями, производством и проектной работой.', 'gsp-children-portal' ),
+			'age'         => __( '12–17 лет', 'gsp-children-portal' ),
+			'image'       => 'program-career.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+		array(
+			'title'       => __( 'Семейные мероприятия', 'gsp-children-portal' ),
+			'description' => __( 'Праздники, экскурсии и добрые встречи, где семьи становятся ближе.', 'gsp-children-portal' ),
+			'age'         => __( 'Для всей семьи', 'gsp-children-portal' ),
+			'image'       => 'program-family.svg',
+			'url'         => '#gsp-children-contacts',
+		),
+	);
+}
+
+/**
+ * Returns demo events used when the portal has no published event posts.
+ *
+ * @return array<int,array<string,string>>
+ */
+function gspcp_get_demo_events() {
+	return array(
+		array( 'date' => __( '25 мая', 'gsp-children-portal' ), 'title' => __( 'Олимпиада по математике', 'gsp-children-portal' ), 'description' => __( 'Онлайн-тур для школьников 5–8 классов.', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 20 мая', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gsp-children-contacts' ),
+		array( 'date' => __( '7 июня', 'gsp-children-portal' ), 'title' => __( 'Летняя смена', 'gsp-children-portal' ), 'description' => __( 'Творчество, спорт и инженерные мастерские.', 'gsp-children-portal' ), 'deadline' => __( 'Заявки принимаются до 1 июня', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gsp-children-contacts' ),
+		array( 'date' => __( '15 июня', 'gsp-children-portal' ), 'title' => __( 'Вебинар для родителей', 'gsp-children-portal' ), 'description' => __( 'Как выбрать программу и подготовить заявку.', 'gsp-children-portal' ), 'deadline' => __( 'Подключение по предварительной записи', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gsp-children-faq' ),
+		array( 'date' => __( '1 июля', 'gsp-children-portal' ), 'title' => __( 'Технический лагерь', 'gsp-children-portal' ), 'description' => __( 'Проекты, робототехника и экскурсии на производство.', 'gsp-children-portal' ), 'deadline' => __( 'Количество мест ограничено', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gsp-children-contacts' ),
+	);
+}
+
+/**
+ * Returns demo family stories.
+ *
+ * @return array<int,array<string,string>>
+ */
+function gspcp_get_demo_stories() {
+	return array(
+		array( 'quote' => __( 'Сын впервые выступил с инженерным проектом и поверил, что большие идеи начинаются с маленьких опытов.', 'gsp-children-portal' ), 'name' => __( 'Анна Морозова', 'gsp-children-portal' ), 'position' => __( 'ведущий инженер проекта', 'gsp-children-portal' ), 'image' => 'story-default.svg' ),
+		array( 'quote' => __( 'Дочь нашла друзей в спортивной секции, а мы увидели, как корпоративная забота помогает семье.', 'gsp-children-portal' ), 'name' => __( 'Илья Соколов', 'gsp-children-portal' ), 'position' => __( 'специалист службы эксплуатации', 'gsp-children-portal' ), 'image' => 'story-default.svg' ),
+	);
+}
+
+/**
+ * Returns demo FAQ items.
+ *
+ * @return array<int,array<string,string>>
+ */
+function gspcp_get_demo_faq() {
+	return array(
+		array( 'question' => __( 'Кто может участвовать в программах?', 'gsp-children-portal' ), 'answer' => __( 'В программах могут участвовать дети сотрудников Газстройпрома. Подробные условия публикуются в карточке каждой программы.', 'gsp-children-portal' ) ),
+		array( 'question' => __( 'Как подать заявку?', 'gsp-children-portal' ), 'answer' => __( 'Выберите направление, подготовьте необходимые данные и отправьте заявку через контактный блок или личный кабинет.', 'gsp-children-portal' ) ),
+		array( 'question' => __( 'С какого возраста можно участвовать?', 'gsp-children-portal' ), 'answer' => __( 'Возраст зависит от конкретного направления: в карточках указаны рекомендуемые возрастные группы.', 'gsp-children-portal' ) ),
+		array( 'question' => __( 'Где посмотреть сроки регистрации?', 'gsp-children-portal' ), 'answer' => __( 'Сроки размещаются в блоке ближайших мероприятий и в описании программ. Если сроков нет, уточните информацию у координатора.', 'gsp-children-portal' ) ),
+	);
+}
+
+/**
+ * Returns demo useful materials.
+ *
+ * @return array<int,array<string,string>>
+ */
+function gspcp_get_demo_materials() {
+	return array(
+		array( 'title' => __( 'Как подать заявку', 'gsp-children-portal' ), 'description' => __( 'Короткая инструкция для родителей.', 'gsp-children-portal' ), 'icon' => '✍', 'url' => '#gsp-children-faq' ),
+		array( 'title' => __( 'Вопросы и ответы', 'gsp-children-portal' ), 'description' => __( 'Ответы на частые вопросы.', 'gsp-children-portal' ), 'icon' => '?', 'url' => '#gsp-children-faq' ),
+		array( 'title' => __( 'Полезные материалы', 'gsp-children-portal' ), 'description' => __( 'Памятки, чек-листы и ссылки.', 'gsp-children-portal' ), 'icon' => '★', 'url' => '#gsp-children-programs' ),
+		array( 'title' => __( 'Контакты', 'gsp-children-portal' ), 'description' => __( 'Связь с координатором программы.', 'gsp-children-portal' ), 'icon' => '☎', 'url' => 'mailto:hr@gazstroyprom.ru' ),
+	);
 }
