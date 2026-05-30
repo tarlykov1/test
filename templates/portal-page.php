@@ -1,218 +1,136 @@
 <?php
 /**
- * Portal page template.
+ * Portal landing template.
  *
  * @package GSP_Children_Portal
- *
- * @var array $context Template context.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$hero      = $context['hero'];
-$programs  = $context['programs'];
-$partner   = $context['partner'];
-$events    = $context['events'];
-$stories   = $context['stories'];
-$faq       = $context['faq'];
-$materials = $context['materials'];
-$links     = isset( $context['links'] ) ? $context['links'] : array();
+$links           = isset( $context['links'] ) ? $context['links'] : array();
+$application_url = isset( $links['application_url'] ) ? $links['application_url'] : '#gspcp-contacts';
+$account_url     = isset( $links['account_url'] ) ? $links['account_url'] : '#gspcp-contacts';
+$programs_url    = isset( $links['programs_url'] ) ? $links['programs_url'] : '#gspcp-programs';
+$events_url      = isset( $links['events_url'] ) ? $links['events_url'] : '#gspcp-events';
 
-$is_admin           = current_user_can( 'manage_options' );
-$use_demo_programs  = empty( $programs );
-$use_demo_events    = empty( $events );
-$use_demo_stories   = empty( $stories );
-$use_demo_faq       = empty( $faq );
-$use_demo_materials = empty( $materials );
-$program_items      = $use_demo_programs ? gspcp_get_demo_programs() : $programs;
-$event_items        = $use_demo_events ? gspcp_get_demo_events() : $events;
-$story_items        = $use_demo_stories ? gspcp_get_demo_stories() : $stories;
-$faq_items          = $use_demo_faq ? gspcp_get_demo_faq() : $faq;
-$material_items     = $use_demo_materials ? gspcp_get_demo_materials() : $materials;
-
-$application_url = ! empty( $links['application_url'] ) ? $links['application_url'] : '#gsp-children-contacts';
-$account_url     = ! empty( $links['account_url'] ) ? $links['account_url'] : '#gsp-children-contacts';
-$all_programs    = ! empty( $links['programs_url'] ) ? $links['programs_url'] : '#gsp-children-programs';
-$all_events      = ! empty( $links['events_url'] ) ? $links['events_url'] : '#gsp-children-events';
-
-$hero_title      = $hero ? get_the_title( $hero ) : __( 'Детям сотрудников Газстройпрома', 'gsp-children-portal' );
-$hero_text       = $hero ? gspcp_get_post_summary( $hero, 24 ) : __( 'Социальные, образовательные и развивающие программы для детей сотрудников группы компаний Газстройпром.', 'gsp-children-portal' );
-$primary_text    = $hero ? gspcp_get_meta( $hero->ID, 'gsp_primary_button_text', __( 'Смотреть программы', 'gsp-children-portal' ) ) : __( 'Смотреть программы', 'gsp-children-portal' );
-$primary_url     = $hero ? gspcp_get_meta( $hero->ID, 'gsp_primary_button_url', $all_programs ) : $all_programs;
-$secondary_text  = $hero ? gspcp_get_meta( $hero->ID, 'gsp_secondary_button_text', __( 'Подать заявку', 'gsp-children-portal' ) ) : __( 'Подать заявку', 'gsp-children-portal' );
-$secondary_url   = $hero ? gspcp_get_meta( $hero->ID, 'gsp_secondary_button_url', $application_url ) : $application_url;
-$partner_link    = $partner ? gspcp_get_meta( $partner->ID, 'gsp_external_url', $application_url ) : $application_url;
-$partner_title   = $partner ? get_the_title( $partner ) : __( 'Скидка для сотрудников Газстройпрома от Skysmart', 'gsp-children-portal' );
-$partner_text    = $partner ? gspcp_get_post_summary( $partner, 32 ) : __( 'Онлайн-занятия для детей по школьным предметам, программированию и английскому языку на специальных условиях для сотрудников группы Газстройпром.', 'gsp-children-portal' );
-$partner_badge   = $partner ? gspcp_get_meta( $partner->ID, 'gsp_badge', '-20%' ) : '-20%';
-$partner_button  = $partner ? gspcp_get_meta( $partner->ID, 'gsp_button_text', __( 'Получить скидку', 'gsp-children-portal' ) ) : __( 'Получить скидку', 'gsp-children-portal' );
-$hero_image_html = $hero ? gspcp_get_image_html( $hero->ID, 'large', 'gsp-children-hero__image', 'hero-retro-default.svg' ) : sprintf( '<img class="gsp-children-hero__image" src="%s" alt="" loading="eager" />', esc_url( gspcp_get_asset_image_url( 'hero-retro-default.svg' ) ) );
+$hero     = ! empty( $context['hero'] ) ? $context['hero'] : null;
+$programs = ! empty( $context['programs'] ) ? $context['programs'] : gspcp_get_demo_programs();
+$partner  = ! empty( $context['partner'] ) ? $context['partner'] : null;
+$events   = ! empty( $context['events'] ) ? $context['events'] : gspcp_get_demo_events();
+$stories  = ! empty( $context['stories'] ) ? $context['stories'] : gspcp_get_demo_stories();
+$faq      = ! empty( $context['faq'] ) ? $context['faq'] : gspcp_get_demo_faq();
+$materials= ! empty( $context['materials'] ) ? $context['materials'] : gspcp_get_demo_materials();
+$footer   = ! empty( $context['footer'] ) ? $context['footer'] : array();
+$demo_hero= gspcp_get_demo_hero();
+$demo_partner = gspcp_get_demo_partner();
 ?>
-<div class="gsp-children" id="gsp-children-portal">
-	<header class="gsp-children-topbar">
-		<a class="gsp-children-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php esc_attr_e( 'Газстройпром', 'gsp-children-portal' ); ?>"><?php esc_html_e( 'Газстройпром', 'gsp-children-portal' ); ?></a>
-		<nav class="gsp-children-nav" aria-label="<?php esc_attr_e( 'Навигация по странице', 'gsp-children-portal' ); ?>">
-			<a href="#gsp-children-programs"><?php esc_html_e( 'Программы', 'gsp-children-portal' ); ?></a>
-			<a href="#gsp-children-events"><?php esc_html_e( 'Мероприятия', 'gsp-children-portal' ); ?></a>
-			<a href="#gsp-children-partners"><?php esc_html_e( 'Партнёры', 'gsp-children-portal' ); ?></a>
-			<a href="#gsp-children-stories"><?php esc_html_e( 'Новости', 'gsp-children-portal' ); ?></a>
-			<a href="#gsp-children-contacts"><?php esc_html_e( 'Вопросы и ответы', 'gsp-children-portal' ); ?></a>
-		</nav>
-		<a class="gsp-children-account" href="<?php echo esc_url( $account_url ); ?>"<?php echo gspcp_external_link_attrs( $account_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Личный кабинет', 'gsp-children-portal' ); ?></a>
+<div class="gspcp-root">
+	<header class="gspcp-header">
+		<div class="gspcp-container gspcp-header__inner">
+			<a class="gspcp-logo" href="#gspcp-hero" aria-label="<?php esc_attr_e( 'Газстройпром', 'gsp-children-portal' ); ?>"><?php esc_html_e( 'Газстройпром', 'gsp-children-portal' ); ?></a>
+			<nav class="gspcp-nav" aria-label="<?php esc_attr_e( 'Навигация по детским программам', 'gsp-children-portal' ); ?>">
+				<a href="#gspcp-programs"><?php esc_html_e( 'Программы', 'gsp-children-portal' ); ?></a>
+				<a href="#gspcp-events"><?php esc_html_e( 'Мероприятия', 'gsp-children-portal' ); ?></a>
+				<a href="#gspcp-partners"><?php esc_html_e( 'Партнёры', 'gsp-children-portal' ); ?></a>
+				<a href="#gspcp-stories"><?php esc_html_e( 'Истории', 'gsp-children-portal' ); ?></a>
+				<a href="#gspcp-faq"><?php esc_html_e( 'Вопросы и ответы', 'gsp-children-portal' ); ?></a>
+			</nav>
+			<a class="gspcp-account" href="<?php echo esc_url( $account_url ); ?>"<?php echo gspcp_external_link_attrs( $account_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Личный кабинет', 'gsp-children-portal' ); ?></a>
+		</div>
 	</header>
 
-	<section class="gsp-children-hero" aria-labelledby="gsp-children-hero-title">
-		<?php echo wp_kses_post( $hero_image_html ); ?>
-		<div class="gsp-children-hero__content">
-			<p class="gsp-children-hero__script"><?php esc_html_e( 'Строим будущее вместе!', 'gsp-children-portal' ); ?></p>
-			<h1 id="gsp-children-hero-title"><?php echo esc_html( $hero_title ); ?></h1>
-			<p><?php echo esc_html( $hero_text ); ?></p>
-			<div class="gsp-children-actions">
-				<a class="gsp-children-button gsp-children-button--primary" href="<?php echo esc_url( $primary_url ); ?>"<?php echo gspcp_external_link_attrs( $primary_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $primary_text ); ?></a>
-				<a class="gsp-children-button gsp-children-button--light" href="<?php echo esc_url( $secondary_url ); ?>"<?php echo gspcp_external_link_attrs( $secondary_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $secondary_text ); ?></a>
-			</div>
-			<?php if ( ! $hero && $is_admin ) : ?><p class="gsp-children-admin-note"><?php esc_html_e( 'Администратор: hero заменится записью из категории gsp-children-hero.', 'gsp-children-portal' ); ?></p><?php endif; ?>
-		</div>
-		<p class="gsp-children-hero__motto"><?php esc_html_e( 'Сильной стране — будущее поколение!', 'gsp-children-portal' ); ?></p>
-	</section>
-
-	<main class="gsp-children-main">
-		<section class="gsp-children-section" id="gsp-children-programs" aria-labelledby="gsp-children-programs-title">
-			<h2 id="gsp-children-programs-title"><?php esc_html_e( 'Программы и направления', 'gsp-children-portal' ); ?></h2>
-			<div class="gsp-children-program-grid">
-			<?php foreach ( $program_items as $program ) : ?>
-				<?php
-				if ( $use_demo_programs ) {
-					$program_link = $program['url'];
-					$title        = $program['title'];
-					$summary      = $program['description'];
-					$age          = $program['age'];
-					$image_html   = sprintf( '<img class="gsp-children-card__image" src="%s" alt="" loading="lazy" />', esc_url( gspcp_get_asset_image_url( $program['image'] ) ) );
-				} else {
-					$program_link = gspcp_get_meta( $program->ID, 'gsp_external_url', get_permalink( $program ) );
-					$title        = get_the_title( $program );
-					$summary      = gspcp_get_post_summary( $program, 12 );
-					$age          = gspcp_get_meta( $program->ID, 'gsp_age', __( '6–17 лет', 'gsp-children-portal' ) );
-					$image_html   = gspcp_get_image_html( $program->ID, 'medium', 'gsp-children-card__image', 'placeholder.svg' );
-				}
-				?>
-				<article class="gsp-children-card">
-					<a class="gsp-children-card__media" href="<?php echo esc_url( $program_link ); ?>"<?php echo gspcp_external_link_attrs( $program_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( $image_html ); ?></a>
-					<div class="gsp-children-card__body">
-						<h3><?php echo esc_html( $title ); ?></h3>
-						<p><?php echo esc_html( $summary ); ?></p>
-						<div><span><?php echo esc_html( $age ); ?></span><a href="<?php echo esc_url( $program_link ); ?>"<?php echo gspcp_external_link_attrs( $program_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr( $title ); ?>">→</a></div>
-					</div>
-				</article>
-			<?php endforeach; ?>
-			</div>
-			<a class="gsp-children-more" href="<?php echo esc_url( $all_programs ); ?>"<?php echo gspcp_external_link_attrs( $all_programs ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Все программы', 'gsp-children-portal' ); ?></a>
-		</section>
-
-		<section class="gsp-children-partner" id="gsp-children-partners" aria-labelledby="gsp-children-partner-title">
-			<div class="gsp-children-partner__content">
-				<h2 id="gsp-children-partner-title"><?php echo esc_html( $partner_title ); ?></h2>
-				<p><?php echo esc_html( $partner_text ); ?></p>
-				<ul><li><?php esc_html_e( 'Индивидуальные занятия', 'gsp-children-portal' ); ?></li><li><?php esc_html_e( 'Подготовка к ОГЭ/ЕГЭ', 'gsp-children-portal' ); ?></li><li><?php esc_html_e( 'Английский язык', 'gsp-children-portal' ); ?></li><li><?php esc_html_e( 'Программирование', 'gsp-children-portal' ); ?></li></ul>
-				<div class="gsp-children-partner__actions"><a class="gsp-children-button gsp-children-button--green" href="<?php echo esc_url( $partner_link ); ?>"<?php echo gspcp_external_link_attrs( $partner_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $partner_button ); ?></a><a class="gsp-children-button gsp-children-button--outline" href="<?php echo esc_url( $partner_link ); ?>"<?php echo gspcp_external_link_attrs( $partner_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Подробнее о программе', 'gsp-children-portal' ); ?></a></div>
-			</div>
-			<div class="gsp-children-partner__art"><span><?php echo esc_html( $partner_badge ); ?><small><?php esc_html_e( 'для сотрудников ГСП', 'gsp-children-portal' ); ?></small></span><img src="<?php echo esc_url( gspcp_get_asset_image_url( 'skysmart-default.svg' ) ); ?>" alt="" loading="lazy" /></div>
-		</section>
-
-		<div class="gsp-children-content-grid">
-			<div class="gsp-children-left">
-				<section class="gsp-children-section" id="gsp-children-events" aria-labelledby="gsp-children-events-title">
-					<h2 id="gsp-children-events-title"><?php esc_html_e( 'Ближайшие мероприятия', 'gsp-children-portal' ); ?></h2>
-					<div class="gsp-children-event-grid">
-					<?php foreach ( $event_items as $event ) : ?>
-						<?php
-						if ( $use_demo_events ) {
-							$event_link = $event['url'];
-							$event_date = $event['date'];
-							$title      = $event['title'];
-							$summary    = $event['deadline'];
-							$image_html = sprintf( '<img class="gsp-children-event__image" src="%s" alt="" loading="lazy" />', esc_url( gspcp_get_asset_image_url( $event['image'] ) ) );
-						} else {
-							$event_link = gspcp_get_meta( $event->ID, 'gsp_external_url', get_permalink( $event ) );
-							$date_meta  = gspcp_get_meta( $event->ID, 'gsp_event_date' );
-							$event_date = $date_meta ? gspcp_format_date( $date_meta ) : date_i18n( 'j F', strtotime( $event->post_date ) );
-							$title      = get_the_title( $event );
-							$summary    = gspcp_get_meta( $event->ID, 'gsp_deadline', gspcp_get_post_summary( $event, 8 ) );
-							$image_html = gspcp_get_image_html( $event->ID, 'thumbnail', 'gsp-children-event__image', 'event-default.svg' );
-						}
-						?>
-						<article class="gsp-children-event"><a href="<?php echo esc_url( $event_link ); ?>"<?php echo gspcp_external_link_attrs( $event_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( $image_html ); ?></a><time><?php echo esc_html( $event_date ); ?></time><div><h3><?php echo esc_html( $title ); ?></h3><p><?php echo esc_html( $summary ); ?></p></div><a class="gsp-children-event__arrow" href="<?php echo esc_url( $event_link ); ?>"<?php echo gspcp_external_link_attrs( $event_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>→</a></article>
-					<?php endforeach; ?>
-					</div>
-					<a class="gsp-children-more" href="<?php echo esc_url( $all_events ); ?>"<?php echo gspcp_external_link_attrs( $all_events ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Все мероприятия', 'gsp-children-portal' ); ?></a>
-				</section>
-
-				<section class="gsp-children-section" id="gsp-children-stories" aria-labelledby="gsp-children-stories-title">
-					<h2 id="gsp-children-stories-title"><?php esc_html_e( 'Истории сотрудников', 'gsp-children-portal' ); ?></h2>
-					<div class="gsp-children-story-grid">
-					<?php foreach ( $story_items as $story ) : ?>
-						<?php
-						if ( $use_demo_stories ) {
-							$quote      = $story['quote'];
-							$name       = $story['name'];
-							$position   = $story['position'];
-							$image_html = sprintf( '<img class="gsp-children-story__image" src="%s" alt="" loading="lazy" />', esc_url( gspcp_get_asset_image_url( $story['image'] ) ) );
-						} else {
-							$quote      = gspcp_get_post_summary( $story, 18 );
-							$name       = gspcp_get_meta( $story->ID, 'gsp_person_name', get_the_title( $story ) );
-							$position   = gspcp_get_meta( $story->ID, 'gsp_person_position' );
-							$image_html = gspcp_get_image_html( $story->ID, 'thumbnail', 'gsp-children-story__image', 'story-default.svg' );
-						}
-						?>
-						<article class="gsp-children-story"><?php echo wp_kses_post( $image_html ); ?><div><blockquote><?php echo esc_html( $quote ); ?></blockquote><strong><?php echo esc_html( $name ); ?></strong><span><?php echo esc_html( $position ); ?></span></div></article>
-					<?php endforeach; ?>
-					</div>
-				</section>
-			</div>
-
-			<aside class="gsp-children-quick" id="gsp-children-contacts" aria-labelledby="gsp-children-quick-title">
-				<h2 id="gsp-children-quick-title"><?php esc_html_e( 'Быстрые ссылки', 'gsp-children-portal' ); ?></h2>
-				<ul>
-				<?php foreach ( $material_items as $material ) : ?>
-					<?php
-					if ( $use_demo_materials ) {
-						$material_link = $material['url'];
-						$title         = $material['title'];
-						$summary       = $material['description'];
-						$icon          = $material['icon'];
-					} else {
-						$material_link = gspcp_get_meta( $material->ID, 'gsp_external_url', get_permalink( $material ) );
-						$title         = get_the_title( $material );
-						$summary       = gspcp_get_post_summary( $material, 9 );
-						$icon          = '↗';
-					}
-					?>
-					<li><a href="<?php echo esc_url( $material_link ); ?>"<?php echo gspcp_external_link_attrs( $material_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><span><?php echo esc_html( $icon ); ?></span><strong><?php echo esc_html( $title ); ?></strong><small><?php echo esc_html( $summary ); ?></small></a></li>
-				<?php endforeach; ?>
-				</ul>
-				<div class="gsp-children-faq-mini" aria-label="<?php esc_attr_e( 'Вопросы и ответы', 'gsp-children-portal' ); ?>">
-					<?php foreach ( array_slice( $faq_items, 0, 3 ) as $index => $item ) : ?>
-						<?php
-						$question = $use_demo_faq ? $item['question'] : get_the_title( $item );
-						$answer   = $use_demo_faq ? wpautop( $item['answer'] ) : apply_filters( 'the_content', $item->post_content );
-						?>
-						<details <?php echo 0 === $index ? 'open' : ''; ?>>
-							<summary><?php echo esc_html( $question ); ?></summary>
-							<div><?php echo wp_kses_post( $answer ); ?></div>
-						</details>
-					<?php endforeach; ?>
+	<main class="gspcp-container">
+		<section class="gspcp-hero" id="gspcp-hero" aria-labelledby="gspcp-hero-title">
+			<div class="gspcp-hero__content">
+				<p class="gspcp-hero__eyebrow"><?php echo esc_html( $hero ? wp_strip_all_tags( $hero->post_content ) : $demo_hero['eyebrow'] ); ?></p>
+				<h1 id="gspcp-hero-title"><?php echo esc_html( $hero ? get_the_title( $hero ) : $demo_hero['title'] ); ?></h1>
+				<p class="gspcp-hero__lead"><?php echo esc_html( $hero ? gspcp_get_post_summary( $hero, 24 ) : $demo_hero['description'] ); ?></p>
+				<div class="gspcp-actions">
+					<?php $primary_url = $hero ? gspcp_get_meta( $hero->ID, 'gsp_primary_button_url', $programs_url ) : $demo_hero['primary_button_url']; ?>
+					<a class="gspcp-btn gspcp-btn--primary" href="<?php echo esc_url( $primary_url ); ?>"<?php echo gspcp_external_link_attrs( $primary_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $hero ? gspcp_get_meta( $hero->ID, 'gsp_primary_button_text', __( 'Смотреть программы', 'gsp-children-portal' ) ) : $demo_hero['primary_button_text'] ); ?></a>
+					<?php $secondary_url = $hero ? gspcp_get_meta( $hero->ID, 'gsp_secondary_button_url', $application_url ) : $demo_hero['secondary_button_url']; ?>
+					<a class="gspcp-btn gspcp-btn--ghost" href="<?php echo esc_url( $secondary_url ); ?>"<?php echo gspcp_external_link_attrs( $secondary_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $hero ? gspcp_get_meta( $hero->ID, 'gsp_secondary_button_text', __( 'Подать заявку', 'gsp-children-portal' ) ) : $demo_hero['secondary_button_text'] ); ?></a>
 				</div>
-				<a class="gsp-children-quick__note" href="<?php echo esc_url( $application_url ); ?>"<?php echo gspcp_external_link_attrs( $application_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Забота о детях — это вклад в будущее!', 'gsp-children-portal' ); ?></a>
+			</div>
+			<div class="gspcp-hero__visual">
+				<?php echo $hero ? wp_kses_post( gspcp_get_image_html( $hero->ID, 'full', 'gspcp-hero__image', 'hero-retro-default.svg' ) ) : '<img class="gspcp-hero__image" src="' . esc_url( gspcp_get_asset_image_url( $demo_hero['image'] ) ) . '" alt="" loading="eager" />'; ?>
+			</div>
+		</section>
+
+		<section class="gspcp-programs-layout" id="gspcp-programs" aria-labelledby="gspcp-programs-title">
+			<div>
+				<div class="gspcp-section-head"><h2 id="gspcp-programs-title"><?php esc_html_e( 'Программы и направления', 'gsp-children-portal' ); ?></h2></div>
+				<div class="gspcp-program-grid">
+				<?php foreach ( $programs as $index => $program ) : ?>
+					<?php
+					$is_demo = is_array( $program );
+					$title   = $is_demo ? $program['title'] : get_the_title( $program );
+					$desc    = $is_demo ? $program['description'] : gspcp_get_post_summary( $program, 12 );
+					$age     = $is_demo ? $program['age'] : gspcp_get_meta( $program->ID, 'gsp_age' );
+					$url     = $is_demo ? $program['url'] : gspcp_get_meta( $program->ID, 'gsp_external_url', $application_url );
+					$image   = $is_demo ? '<img class="gspcp-program-card__image" src="' . esc_url( gspcp_get_asset_image_url( $program['image'] ) ) . '" alt="" loading="lazy" />' : gspcp_get_image_html( $program->ID, 'medium_large', 'gspcp-program-card__image', gspcp_get_demo_programs()[ $index % 6 ]['image'] );
+					?>
+					<article class="gspcp-program-card"><a href="<?php echo esc_url( $url ); ?>"<?php echo gspcp_external_link_attrs( $url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( $image ); ?><span class="gspcp-program-card__body"><strong><?php echo esc_html( $title ); ?></strong><em><?php echo esc_html( $desc ); ?></em><small><?php echo esc_html( $age ); ?></small><b aria-hidden="true">→</b></span></a></article>
+				<?php endforeach; ?>
+				</div>
+				<a class="gspcp-more" href="<?php echo esc_url( $programs_url ); ?>"<?php echo gspcp_external_link_attrs( $programs_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Все программы', 'gsp-children-portal' ); ?></a>
+			</div>
+
+			<aside class="gspcp-partner" id="gspcp-partners">
+				<?php
+				$partner_title = $partner ? get_the_title( $partner ) : $demo_partner['title'];
+				$partner_desc  = $partner ? gspcp_get_post_summary( $partner, 24 ) : $demo_partner['description'];
+				$partner_url   = $partner ? gspcp_get_meta( $partner->ID, 'gsp_external_url', $demo_partner['url'] ) : $demo_partner['url'];
+				$partner_btn   = $partner ? gspcp_get_meta( $partner->ID, 'gsp_button_text', $demo_partner['button'] ) : $demo_partner['button'];
+				$partner_badge = $partner ? gspcp_get_meta( $partner->ID, 'gsp_badge', $demo_partner['badge'] ) : $demo_partner['badge'];
+				$partner_items = $partner ? array_filter( array_map( 'trim', explode( "\n", wp_strip_all_tags( $partner->post_content ) ) ) ) : $demo_partner['items'];
+				?>
+				<span class="gspcp-partner__badge"><?php echo esc_html( $partner_badge ); ?></span>
+				<div class="gspcp-partner__copy"><h2><?php echo esc_html( $partner_title ); ?></h2><p><?php echo esc_html( $partner_desc ); ?></p><ul><?php foreach ( array_slice( $partner_items, 0, 4 ) as $item ) : ?><li><?php echo esc_html( $item ); ?></li><?php endforeach; ?></ul><a class="gspcp-btn gspcp-btn--green" href="<?php echo esc_url( $partner_url ); ?>"<?php echo gspcp_external_link_attrs( $partner_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $partner_btn ); ?></a></div>
+				<div class="gspcp-partner__visual"><?php echo $partner ? wp_kses_post( gspcp_get_image_html( $partner->ID, 'medium_large', 'gspcp-partner__image', 'skysmart-default.svg' ) ) : '<img class="gspcp-partner__image" src="' . esc_url( gspcp_get_asset_image_url( 'skysmart-default.svg' ) ) . '" alt="" loading="lazy" />'; ?></div>
 			</aside>
+		</section>
+
+		<div class="gspcp-lower-grid">
+			<section class="gspcp-section" id="gspcp-events" aria-labelledby="gspcp-events-title">
+				<div class="gspcp-section-head"><h2 id="gspcp-events-title"><?php esc_html_e( 'Ближайшие мероприятия', 'gsp-children-portal' ); ?></h2></div>
+				<div class="gspcp-event-grid">
+				<?php foreach ( $events as $event ) : ?>
+					<?php
+					$is_demo = is_array( $event );
+					$date    = $is_demo ? $event['date'] : gspcp_get_meta( $event->ID, 'gsp_event_date' );
+					$parts   = gspcp_get_event_date_parts( $date );
+					$title   = $is_demo ? $event['title'] : get_the_title( $event );
+					$summary = $is_demo ? $event['deadline'] : gspcp_get_meta( $event->ID, 'gsp_deadline', gspcp_get_post_summary( $event, 8 ) );
+					$url     = $is_demo ? $event['url'] : gspcp_get_meta( $event->ID, 'gsp_external_url', $application_url );
+					$image   = $is_demo ? '<img src="' . esc_url( gspcp_get_asset_image_url( $event['image'] ) ) . '" alt="" loading="lazy" />' : gspcp_get_image_html( $event->ID, 'thumbnail', '', 'event-default.svg' );
+					?>
+					<article class="gspcp-event"><a href="<?php echo esc_url( $url ); ?>"<?php echo gspcp_external_link_attrs( $url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo wp_kses_post( $image ); ?><time><b><?php echo esc_html( $parts['day'] ); ?></b><span><?php echo esc_html( $parts['month'] ); ?></span></time><span><strong><?php echo esc_html( $title ); ?></strong><small><?php echo esc_html( $summary ); ?></small></span><em>→</em></a></article>
+				<?php endforeach; ?>
+				</div>
+				<a class="gspcp-more" href="<?php echo esc_url( $events_url ); ?>"<?php echo gspcp_external_link_attrs( $events_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Все мероприятия', 'gsp-children-portal' ); ?></a>
+			</section>
+
+			<section class="gspcp-section" id="gspcp-stories" aria-labelledby="gspcp-stories-title">
+				<div class="gspcp-section-head"><h2 id="gspcp-stories-title"><?php esc_html_e( 'Истории сотрудников', 'gsp-children-portal' ); ?></h2></div>
+				<div class="gspcp-story-grid">
+				<?php foreach ( $stories as $story ) : ?>
+					<?php $is_demo = is_array( $story ); ?>
+					<article class="gspcp-story"><?php echo $is_demo ? '<img src="' . esc_url( gspcp_get_asset_image_url( $story['image'] ) ) . '" alt="" loading="lazy" />' : wp_kses_post( gspcp_get_image_html( $story->ID, 'thumbnail', '', 'story-default.svg' ) ); ?><div><blockquote>«<?php echo esc_html( $is_demo ? $story['quote'] : gspcp_get_post_summary( $story, 20 ) ); ?>»</blockquote><strong><?php echo esc_html( $is_demo ? $story['name'] : gspcp_get_meta( $story->ID, 'gsp_person_name', get_the_title( $story ) ) ); ?></strong><small><?php echo esc_html( $is_demo ? $story['position'] : gspcp_get_meta( $story->ID, 'gsp_person_position' ) ); ?></small></div></article>
+				<?php endforeach; ?>
+				</div>
+			</section>
 		</div>
+
+		<section class="gspcp-info-grid" id="gspcp-faq" aria-labelledby="gspcp-faq-title">
+			<div class="gspcp-faq"><h2 id="gspcp-faq-title"><?php esc_html_e( 'Вопросы и ответы', 'gsp-children-portal' ); ?></h2><?php foreach ( $faq as $index => $item ) : ?><?php $is_demo = is_array( $item ); ?><details <?php echo 0 === $index ? 'open' : ''; ?>><summary><?php echo esc_html( $is_demo ? $item['question'] : get_the_title( $item ) ); ?></summary><div><?php echo wp_kses_post( wpautop( $is_demo ? $item['answer'] : $item->post_content ) ); ?></div></details><?php endforeach; ?></div>
+			<aside class="gspcp-quick" id="gspcp-contacts"><h2><?php esc_html_e( 'Быстрые ссылки', 'gsp-children-portal' ); ?></h2><ul><?php foreach ( $materials as $material ) : ?><?php $is_demo = is_array( $material ); $url = $is_demo ? $material['url'] : gspcp_get_meta( $material->ID, 'gsp_external_url', $application_url ); ?><li><a href="<?php echo esc_url( $url ); ?>"<?php echo gspcp_external_link_attrs( $url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><span><?php echo esc_html( $is_demo ? $material['icon'] : '↗' ); ?></span><strong><?php echo esc_html( $is_demo ? $material['title'] : get_the_title( $material ) ); ?></strong><small><?php echo esc_html( $is_demo ? $material['description'] : gspcp_get_post_summary( $material, 8 ) ); ?></small></a></li><?php endforeach; ?></ul><a class="gspcp-postcard" href="<?php echo esc_url( $application_url ); ?>"<?php echo gspcp_external_link_attrs( $application_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php esc_html_e( 'Забота о детях — это вклад в будущее!', 'gsp-children-portal' ); ?></a></aside>
+		</section>
 	</main>
 
-	<footer class="gsp-children-benefits" aria-label="<?php esc_attr_e( 'Преимущества', 'gsp-children-portal' ); ?>">
-		<span><?php esc_html_e( 'Мы создаём возможности', 'gsp-children-portal' ); ?></span>
-		<span><?php esc_html_e( 'Мы поддерживаем развитие', 'gsp-children-portal' ); ?></span>
-		<span><?php esc_html_e( 'Мы вдохновляем на достижения', 'gsp-children-portal' ); ?></span>
-		<span><?php esc_html_e( 'Мы строим будущее вместе', 'gsp-children-portal' ); ?></span>
-	</footer>
+	<footer class="gspcp-footer"><div class="gspcp-container gspcp-footer__inner">
+		<?php if ( $footer ) : ?><?php foreach ( $footer as $item ) : ?><span><?php echo esc_html( get_the_title( $item ) ); ?></span><?php endforeach; ?><?php else : ?><span><?php esc_html_e( 'Мы создаём возможности', 'gsp-children-portal' ); ?></span><span><?php esc_html_e( 'Мы поддерживаем развитие', 'gsp-children-portal' ); ?></span><span><?php esc_html_e( 'Мы вдохновляем на достижения', 'gsp-children-portal' ); ?></span><span><?php esc_html_e( 'Мы строим будущее вместе', 'gsp-children-portal' ); ?></span><?php endif; ?>
+	</div></footer>
 </div>

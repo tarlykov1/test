@@ -1,6 +1,6 @@
 <?php
 /**
- * Post meta boxes for GSP Children Portal.
+ * Meta boxes for GSP Children Portal CPT.
  *
  * @package GSP_Children_Portal
  */
@@ -34,35 +34,14 @@ function gspcp_get_meta_fields() {
 }
 
 /**
- * Checks whether post belongs to plugin category.
- *
- * @param int $post_id Post ID.
- * @return bool
- */
-function gspcp_is_children_post( $post_id ) {
-	$terms = get_the_terms( $post_id, 'category' );
-	if ( empty( $terms ) || is_wp_error( $terms ) ) {
-		return false;
-	}
-
-	foreach ( $terms as $term ) {
-		if ( 0 === strpos( $term->slug, 'gsp-children' ) ) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-/**
- * Adds meta box for posts.
+ * Adds meta box for CPT only.
  */
 function gspcp_add_meta_box() {
 	add_meta_box(
 		'gspcp_post_meta',
-		__( 'Детские программы ГСП', 'gsp-children-portal' ),
+		__( 'Поля детской программы', 'gsp-children-portal' ),
 		'gspcp_render_meta_box',
-		'post',
+		GSPCP_POST_TYPE,
 		'normal',
 		'default'
 	);
@@ -75,19 +54,12 @@ add_action( 'add_meta_boxes', 'gspcp_add_meta_box' );
  * @param WP_Post $post Post object.
  */
 function gspcp_render_meta_box( $post ) {
-	$is_children_post = gspcp_is_children_post( $post->ID );
 	wp_nonce_field( 'gspcp_save_meta', 'gspcp_meta_nonce' );
 	?>
-	<div class="gspcp-meta-box" data-gspcp-meta-box>
+	<div class="gspcp-meta-box">
 		<p class="description">
-			<?php esc_html_e( 'Поля используются на странице [gsp_children_portal]. Блок становится актуальным после выбора одной из категорий gsp-children-*.', 'gsp-children-portal' ); ?>
+			<?php esc_html_e( 'Поля используются только элементами CPT gsp_child_item на странице [gsp_children_portal]. Выберите раздел страницы в таксономии «Разделы страницы».', 'gsp-children-portal' ); ?>
 		</p>
-		<?php if ( ! $is_children_post ) : ?>
-			<p class="notice notice-info inline">
-				<?php esc_html_e( 'Сейчас запись не относится к категориям портала. Выберите категорию gsp-children-* и обновите запись — после этого появятся дополнительные поля.', 'gsp-children-portal' ); ?>
-			</p>
-			<?php return; ?>
-		<?php endif; ?>
 		<table class="form-table" role="presentation">
 			<tbody>
 			<?php foreach ( gspcp_get_meta_fields() as $key => $field ) : ?>
@@ -105,7 +77,7 @@ function gspcp_render_meta_box( $post ) {
 }
 
 /**
- * Saves meta fields.
+ * Saves meta fields safely.
  *
  * @param int $post_id Post ID.
  */
@@ -129,12 +101,7 @@ function gspcp_save_post_meta( $post_id ) {
 		}
 
 		$raw = wp_unslash( $_POST[ $key ] );
-		if ( is_array( $raw ) ) {
-			delete_post_meta( $post_id, $key );
-			continue;
-		}
-
-		if ( '' === trim( $raw ) ) {
+		if ( is_array( $raw ) || '' === trim( $raw ) ) {
 			delete_post_meta( $post_id, $key );
 			continue;
 		}
@@ -147,7 +114,11 @@ function gspcp_save_post_meta( $post_id ) {
 			$value = sanitize_text_field( $raw );
 		}
 
-		update_post_meta( $post_id, $key, $value );
+		if ( '' === $value ) {
+			delete_post_meta( $post_id, $key );
+		} else {
+			update_post_meta( $post_id, $key, $value );
+		}
 	}
 }
-add_action( 'save_post_post', 'gspcp_save_post_meta' );
+add_action( 'save_post_' . GSPCP_POST_TYPE, 'gspcp_save_post_meta' );
