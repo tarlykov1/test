@@ -80,8 +80,24 @@ function gspcp_enqueue_shortcode_assets() {
  *
  * @return string
  */
-function gspcp_render_shortcode() {
+function gspcp_render_shortcode( $atts = array() ) {
 	gspcp_enqueue_shortcode_assets();
+
+	$atts = shortcode_atts(
+		array(
+			'application_url' => '#gsp-children-contacts',
+			'account_url'     => '#gsp-children-contacts',
+			'programs_url'    => '#gsp-children-programs',
+			'events_url'      => '#gsp-children-events',
+		),
+		(array) $atts,
+		'gsp_children_portal'
+	);
+
+	$links = array();
+	foreach ( $atts as $key => $value ) {
+		$links[ $key ] = sanitize_text_field( $value );
+	}
 
 	$context = array(
 		'hero'      => gspcp_get_single_post_by_category( 'gsp-children-hero' ),
@@ -91,6 +107,7 @@ function gspcp_render_shortcode() {
 		'stories'   => gspcp_get_category_posts( 'gsp-children-stories', 3 ),
 		'faq'       => gspcp_get_category_posts( 'gsp-children-faq', 20, 'menu_order', 'ASC' ),
 		'materials' => gspcp_get_category_posts( 'gsp-children-materials', 8 ),
+		'links'     => $links,
 	);
 
 	ob_start();
