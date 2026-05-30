@@ -1,30 +1,24 @@
 (function () {
-  'use strict';
+	'use strict';
 
-  function initAccordion(root) {
-    var buttons = root.querySelectorAll('.gspcp-accordion__button');
-    buttons.forEach(function (button) {
-      button.addEventListener('click', function () {
-        var panel = button.nextElementSibling;
-        var isExpanded = button.getAttribute('aria-expanded') === 'true';
+	function initSmoothLinks(root) {
+		root.querySelectorAll('a[href^="#gsp-children-"]').forEach(function (link) {
+			link.addEventListener('click', function (event) {
+				var target = document.querySelector(link.getAttribute('href'));
 
-        buttons.forEach(function (otherButton) {
-          var otherPanel = otherButton.nextElementSibling;
-          otherButton.setAttribute('aria-expanded', 'false');
-          if (otherPanel) {
-            otherPanel.hidden = true;
-          }
-        });
+				if (!target) {
+					return;
+				}
 
-        button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-        if (panel) {
-          panel.hidden = isExpanded;
-        }
-      });
-    });
-  }
+				event.preventDefault();
+				target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		});
+	}
 
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-gspcp-accordion]').forEach(initAccordion);
-  });
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('.gsp-children').forEach(function (root) {
+			initSmoothLinks(root);
+		});
+	});
 }());
