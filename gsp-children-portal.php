@@ -3,7 +3,7 @@
  * Plugin Name: GSP Children Portal
  * Plugin URI: https://example.com/gsp-children-portal
  * Description: Страница внутрикорпоративного портала «Детские программы Газстройпрома» через шорткод [gsp_children_portal].
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Gazstroyprom
  * Text Domain: gsp-children-portal
  * Domain Path: /languages
@@ -16,14 +16,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GSPCP_VERSION', '1.0.0' );
+define( 'GSPCP_VERSION', '2.0.0' );
 define( 'GSPCP_PLUGIN_FILE', __FILE__ );
 define( 'GSPCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'GSPCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
+require_once GSPCP_PLUGIN_DIR . 'includes/post-types.php';
+require_once GSPCP_PLUGIN_DIR . 'includes/taxonomies.php';
 require_once GSPCP_PLUGIN_DIR . 'includes/helpers.php';
 require_once GSPCP_PLUGIN_DIR . 'includes/queries.php';
 require_once GSPCP_PLUGIN_DIR . 'includes/meta-boxes.php';
+require_once GSPCP_PLUGIN_DIR . 'includes/demo-content.php';
 require_once GSPCP_PLUGIN_DIR . 'includes/admin.php';
 
 /**
@@ -35,16 +38,23 @@ function gspcp_load_textdomain() {
 add_action( 'plugins_loaded', 'gspcp_load_textdomain' );
 
 /**
- * Creates required categories on activation.
+ * Creates required CPT/taxonomy structures and default section terms on activation.
  */
 function gspcp_activate() {
-	gspcp_ensure_categories();
-
-	if ( get_option( 'gspcp_auto_demo_enabled', '0' ) === '1' ) {
-		gspcp_create_demo_content();
-	}
+	gspcp_register_post_type();
+	gspcp_register_taxonomy();
+	gspcp_ensure_section_terms();
+	flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'gspcp_activate' );
+
+/**
+ * Flushes rewrite rules on deactivation.
+ */
+function gspcp_deactivate() {
+	flush_rewrite_rules();
+}
+register_deactivation_hook( __FILE__, 'gspcp_deactivate' );
 
 /**
  * Registers front assets.
@@ -78,6 +88,7 @@ function gspcp_enqueue_shortcode_assets() {
 /**
  * Renders children portal shortcode.
  *
+ * @param array $atts Shortcode attributes.
  * @return string
  */
 function gspcp_render_shortcode( $atts = array() ) {
@@ -85,10 +96,10 @@ function gspcp_render_shortcode( $atts = array() ) {
 
 	$atts = shortcode_atts(
 		array(
-			'application_url' => '#gsp-children-contacts',
-			'account_url'     => '#gsp-children-contacts',
-			'programs_url'    => '#gsp-children-programs',
-			'events_url'      => '#gsp-children-events',
+			'application_url' => '#gspcp-contacts',
+			'account_url'     => '#gspcp-contacts',
+			'programs_url'    => '#gspcp-programs',
+			'events_url'      => '#gspcp-events',
 		),
 		(array) $atts,
 		'gsp_children_portal'
@@ -99,16 +110,8 @@ function gspcp_render_shortcode( $atts = array() ) {
 		$links[ $key ] = sanitize_text_field( $value );
 	}
 
-	$context = array(
-		'hero'      => gspcp_get_single_post_by_category( 'gsp-children-hero' ),
-		'programs'  => gspcp_get_program_posts( 6 ),
-		'partner'   => gspcp_get_single_post_by_category( 'gsp-children-partners' ),
-		'events'    => gspcp_get_event_posts( 4 ),
-		'stories'   => gspcp_get_category_posts( 'gsp-children-stories', 3 ),
-		'faq'       => gspcp_get_category_posts( 'gsp-children-faq', 20, 'menu_order', 'ASC' ),
-		'materials' => gspcp_get_category_posts( 'gsp-children-materials', 8 ),
-		'links'     => $links,
-	);
+	$context          = gspcp_get_portal_context();
+	$context['links'] = $links;
 
 	ob_start();
 	include GSPCP_PLUGIN_DIR . 'templates/portal-page.php';
