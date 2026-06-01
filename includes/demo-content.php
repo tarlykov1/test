@@ -100,6 +100,7 @@ function gspcp_create_demo_content() {
 			'gsp_primary_button_url'    => '#gspcp-programs',
 			'gsp_secondary_button_text' => __( 'Подать заявку', 'gsp-children-portal' ),
 			'gsp_secondary_button_url'  => '#gspcp-contacts',
+			'gsp_fallback_image'       => gspcp_get_demo_hero()['image'],
 		)
 	);
 
@@ -116,7 +117,8 @@ function gspcp_create_demo_content() {
 			array(
 				'gsp_age'          => $program['age'],
 				'gsp_order'        => ( $index + 1 ) * 10,
-				'gsp_external_url' => $program['url'],
+				'gsp_external_url'   => $program['url'],
+				'gsp_fallback_image' => $program['image'],
 			)
 		);
 	}
@@ -134,7 +136,8 @@ function gspcp_create_demo_content() {
 		array(
 			'gsp_button_text'  => $partner['button'],
 			'gsp_external_url' => $partner['url'],
-			'gsp_badge'        => $partner['badge'],
+			'gsp_badge'          => $partner['badge'],
+			'gsp_fallback_image' => $partner['image'],
 		)
 	);
 
@@ -152,7 +155,8 @@ function gspcp_create_demo_content() {
 			array(
 				'gsp_event_date'   => isset( $demo_event_dates[ $index ] ) ? $demo_event_dates[ $index ] : '',
 				'gsp_deadline'     => $event['deadline'],
-				'gsp_external_url' => $event['url'],
+				'gsp_external_url'   => $event['url'],
+				'gsp_fallback_image' => $event['image'],
 			)
 		);
 	}
@@ -170,6 +174,7 @@ function gspcp_create_demo_content() {
 			array(
 				'gsp_person_name'     => $story['name'],
 				'gsp_person_position' => $story['position'],
+				'gsp_fallback_image'    => $story['image'],
 			)
 		);
 	}

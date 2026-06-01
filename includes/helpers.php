@@ -202,10 +202,10 @@ function gspcp_get_demo_partner() {
  */
 function gspcp_get_demo_events() {
 	return array(
-		array( 'date' => __( '25 мая', 'gsp-children-portal' ), 'title' => __( 'Олимпиада по математике', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 15 мая', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gspcp-contacts' ),
-		array( 'date' => __( '7 июня', 'gsp-children-portal' ), 'title' => __( 'Летняя смена «Путешествие к открытиям»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 20 мая', 'gsp-children-portal' ), 'image' => 'program-camp.svg', 'url' => '#gspcp-contacts' ),
-		array( 'date' => __( '15 июня', 'gsp-children-portal' ), 'title' => __( 'Вебинар для родителей', 'gsp-children-portal' ), 'deadline' => __( 'Онлайн', 'gsp-children-portal' ), 'image' => 'program-development.svg', 'url' => '#gspcp-contacts' ),
-		array( 'date' => __( '1 июля', 'gsp-children-portal' ), 'title' => __( 'Технический лагерь «Инженеры будущего»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 25 июня', 'gsp-children-portal' ), 'image' => 'program-career.svg', 'url' => '#gspcp-contacts' ),
+		array( 'date' => __( '25 мая', 'gsp-children-portal' ), 'title' => __( 'Олимпиада по математике', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 15 мая', 'gsp-children-portal' ), 'image' => 'event-math.svg', 'url' => '#gspcp-contacts' ),
+		array( 'date' => __( '7 июня', 'gsp-children-portal' ), 'title' => __( 'Летняя смена «Путешествие к открытиям»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 20 мая', 'gsp-children-portal' ), 'image' => 'event-camp.svg', 'url' => '#gspcp-contacts' ),
+		array( 'date' => __( '15 июня', 'gsp-children-portal' ), 'title' => __( 'Вебинар для родителей', 'gsp-children-portal' ), 'deadline' => __( 'Онлайн', 'gsp-children-portal' ), 'image' => 'event-webinar.svg', 'url' => '#gspcp-contacts' ),
+		array( 'date' => __( '1 июля', 'gsp-children-portal' ), 'title' => __( 'Технический лагерь «Инженеры будущего»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 25 июня', 'gsp-children-portal' ), 'image' => 'event-tech.svg', 'url' => '#gspcp-contacts' ),
 	);
 }
 
@@ -216,8 +216,8 @@ function gspcp_get_demo_events() {
  */
 function gspcp_get_demo_stories() {
 	return array(
-		array( 'quote' => __( 'Мой сын участвует в программе профориентации и уже побывал на настоящем строительном объекте. Это вдохновляет его на новые цели!', 'gsp-children-portal' ), 'name' => __( 'Андрей К.', 'gsp-children-portal' ), 'position' => __( 'инженер', 'gsp-children-portal' ), 'image' => 'story-default.svg' ),
-		array( 'quote' => __( 'Благодаря программам Газстройпрома дочь раскрыла свои таланты и нашла новых друзей!', 'gsp-children-portal' ), 'name' => __( 'Елена М.', 'gsp-children-portal' ), 'position' => __( 'экономист', 'gsp-children-portal' ), 'image' => 'story-default.svg' ),
+		array( 'quote' => __( 'Мой сын участвует в программе профориентации и уже побывал на настоящем строительном объекте. Это вдохновляет его на новые цели!', 'gsp-children-portal' ), 'name' => __( 'Андрей К.', 'gsp-children-portal' ), 'position' => __( 'инженер', 'gsp-children-portal' ), 'image' => 'story-boy.svg' ),
+		array( 'quote' => __( 'Благодаря программам Газстройпрома дочь раскрыла свои таланты и нашла новых друзей!', 'gsp-children-portal' ), 'name' => __( 'Елена М.', 'gsp-children-portal' ), 'position' => __( 'экономист', 'gsp-children-portal' ), 'image' => 'story-girl.svg' ),
 	);
 }
 
