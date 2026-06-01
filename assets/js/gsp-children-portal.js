@@ -1,6 +1,8 @@
 (function () {
 	'use strict';
 
+	document.documentElement.classList.add('gspcp-has-portal');
+
 	function findAnchorTarget(link) {
 		var href = link.getAttribute('href');
 
