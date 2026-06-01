@@ -173,7 +173,7 @@ function gspcp_get_demo_programs() {
 		array( 'title' => __( 'Спорт', 'gsp-children-portal' ), 'description' => __( 'Спортивные секции, турниры и оздоровительные программы.', 'gsp-children-portal' ), 'age' => __( '6–17 лет', 'gsp-children-portal' ), 'image' => 'program-sport.svg', 'url' => '#gspcp-contacts' ),
 		array( 'title' => __( 'Лагеря', 'gsp-children-portal' ), 'description' => __( 'Загородные и тематические лагеря, смены и экспедиции.', 'gsp-children-portal' ), 'age' => __( '7–17 лет', 'gsp-children-portal' ), 'image' => 'program-camp.svg', 'url' => '#gspcp-contacts' ),
 		array( 'title' => __( 'Олимпиады', 'gsp-children-portal' ), 'description' => __( 'Олимпиады и конкурсы по различным предметам и направлениям.', 'gsp-children-portal' ), 'age' => __( '7–17 лет', 'gsp-children-portal' ), 'image' => 'program-olympiad.svg', 'url' => '#gspcp-contacts' ),
-		array( 'title' => __( 'Развитие', 'gsp-children-portal' ), 'description' => __( 'Творческие студии, технические кружки и мастер-классы.', 'gsp-children-portal' ), 'age' => __( '6–17 лет', 'gsp-children-portal' ), 'image' => 'program-family.svg', 'url' => '#gspcp-contacts' ),
+		array( 'title' => __( 'Развитие', 'gsp-children-portal' ), 'description' => __( 'Творческие студии, технические кружки и мастер-классы.', 'gsp-children-portal' ), 'age' => __( '6–17 лет', 'gsp-children-portal' ), 'image' => 'program-development.svg', 'url' => '#gspcp-contacts' ),
 		array( 'title' => __( 'Профориентация', 'gsp-children-portal' ), 'description' => __( 'Профориентационные программы и экскурсии на объекты.', 'gsp-children-portal' ), 'age' => __( '12–17 лет', 'gsp-children-portal' ), 'image' => 'program-career.svg', 'url' => '#gspcp-contacts' ),
 	);
 }
@@ -204,7 +204,7 @@ function gspcp_get_demo_events() {
 	return array(
 		array( 'date' => __( '25 мая', 'gsp-children-portal' ), 'title' => __( 'Олимпиада по математике', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 15 мая', 'gsp-children-portal' ), 'image' => 'event-default.svg', 'url' => '#gspcp-contacts' ),
 		array( 'date' => __( '7 июня', 'gsp-children-portal' ), 'title' => __( 'Летняя смена «Путешествие к открытиям»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 20 мая', 'gsp-children-portal' ), 'image' => 'program-camp.svg', 'url' => '#gspcp-contacts' ),
-		array( 'date' => __( '15 июня', 'gsp-children-portal' ), 'title' => __( 'Вебинар для родителей', 'gsp-children-portal' ), 'deadline' => __( 'Онлайн', 'gsp-children-portal' ), 'image' => 'program-family.svg', 'url' => '#gspcp-contacts' ),
+		array( 'date' => __( '15 июня', 'gsp-children-portal' ), 'title' => __( 'Вебинар для родителей', 'gsp-children-portal' ), 'deadline' => __( 'Онлайн', 'gsp-children-portal' ), 'image' => 'program-development.svg', 'url' => '#gspcp-contacts' ),
 		array( 'date' => __( '1 июля', 'gsp-children-portal' ), 'title' => __( 'Технический лагерь «Инженеры будущего»', 'gsp-children-portal' ), 'deadline' => __( 'Регистрация до 25 июня', 'gsp-children-portal' ), 'image' => 'program-career.svg', 'url' => '#gspcp-contacts' ),
 	);
 }
